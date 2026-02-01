@@ -1,2 +1,78 @@
-# MontageSubs-Aegisub-Scripts
-A collection of advanced Aegisub Lua scripts optimized for macOS. Includes Glitch, Shaker, Pro Gradient, and more.
+
+# 🎬 Aegisub 特效工具箱 (macOS Optimized)
+
+> **这是一套为追求效率与精准的字幕后期打造的自动化方案。** 本项目由 **NickCollect** 开发，旨在通过 Lua 脚本解决 Aegisub 原生功能在复杂动效和 macOS 兼容性上的痛点。
+
+---
+
+## 📘 核心科普：为什么字幕后期需要 Lua 脚本？
+
+在深入使用这些工具之前，了解其背后的技术逻辑有助于你更好地创作。
+
+### 1. 从“手动标签”到“算法生成”
+
+ASS (Advanced Substation Alpha) 字幕格式通过标签（Tags）控制视觉。当涉及到成百上千行的样式修改时，手动输入极易出错且效率低下。
+
+* **自动化背景**：Lua 脚本作为 Aegisub 的扩展接口，其核心价值在于利用循环算法在毫秒内完成大规模的标签注入与清理。
+* **解决的问题**：极大程度缩短了重复性劳作的时间，让后期人员能将精力集中在视觉构思上。
+
+### 2. 时间轴离散化：实现“动态”的唯一路径
+
+ASS 渲染引擎本质上是描述性的，不支持像视频软件那样的原生动态图层。
+
+* **技术实现**：脚本通过“切帧（Frame-by-Frame）”技术，将单行字幕按帧切碎。通过为每一帧计算不同的 `\pos`（坐标）、`\fscx/y`（缩放）或 `\alpha`（透明度），从而在视觉上营造出连贯的动态效果。
+* **解决的问题**：实现了诸如“故障干扰”、“文字震动”等非线性视觉动效。
+
+### 3. macOS 端的深度适配
+
+长期以来，许多流行的 Aegisub 特效脚本在 Mac 上会因为 GUI 控件（如颜色盘）的调用而崩溃。
+
+* **技术补丁**：本项目所有脚本均放弃了复杂的图形界面，回退至 **纯文本 Edit 模式**，确保了在 macOS 下的极高稳定性。
+
+---
+
+## 🛠️ 脚本详细清单与应用指南
+
+### ⚡ 基础效率类
+
+* **Quick Border & Blur (批量边框模糊)**: 批量更新样式，并具备旧标签清理逻辑，防止代码堆叠干扰渲染。
+* **Batch Move (批量位移)**: 精确的像素级坐标修正，支持读取现有 `\pos` 进行偏移计算。
+* **Split By Character (非破坏性拆字)**: 采用 **Alpha 遮罩法**，通过透明度控制显隐而非物理拆分，完美保留了字符间的 Kernings（排版精度）。
+
+### 🎭 视觉动态类
+
+* **Pro Gradient Smart Pos (智能垂直渐变 v10.0)**: 针对 `\pos` 位移后的错位痛点，通过算法反推 Y 轴切片坐标，实现精准的色彩分层。
+* **Glitch Effect (故障干扰)**: 模拟信号损坏，通过高频随机缩放标签制造抽搐感。
+* **Text Shaker (文字震动)**: 模拟镜头抖动效果，在每一帧注入随机位移向量。
+* **Neon Flicker (霓虹灯闪烁)**: 模拟灯管接触不良，通过随机透明度切换实现真实的物理视觉。
+
+---
+
+## 📥 安装指南 (Installation)
+
+为了确保脚本在您的 Aegisub 中正常运行，请按照以下步骤操作：
+
+### 1. 脚本存放路径
+
+请将所有 `.lua` 文件下载并放入 Aegisub 的自动化脚本自动加载文件夹：
+
+* **macOS (推荐)**: `/Applications/Aegisub.app/Contents/SharedSupport/automation/autoload`
+* *(注：右键 Aegisub 程序图标，选择“显示包内容”即可进入该路径)*
+
+
+* **Windows**: `C:\Program Files\Aegisub\automation\autoload`
+
+### 2. 技术环境与依赖检查
+
+* **标准库依赖**: 本库大部分脚本均依赖 Aegisub 内置的 `karaskel.lua` 标准库。
+* **注意事项**: 请确保您的 Aegisub 安装目录下的 `include` 文件夹完整，切勿删除其中的 `karaskel.lua` 或其他依赖文件。
+* **字符编码**: 本项目所有脚本均采用 **UTF-8 (无 BOM)** 编码，以确保在 macOS 环境下中文不产生乱码。
+
+---
+
+## 🚀 生产建议与安全性 (Best Practices)
+
+* **非破坏性编辑**: 处理切帧特效（如 Shaker, Glitch）时，建议勾选 `Keep Original Line`，脚本会将源行设为注释以备微调。
+* **撤销机制**: 所有脚本均已集成 `set_undo_point`，支持 `Cmd/Ctrl + Z` 快速回滚。
+
+---
